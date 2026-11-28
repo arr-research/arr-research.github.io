@@ -1,0 +1,1198 @@
+--- Page 1 ---
+Quantum Entropic Metric Geometry:
+How Entanglement Reshapes Information Distance
+Cones
+Lluis Eriksson∗
+November 28, 2026
+Abstract
+For ann-party quantum stateρA0···An−1, thequantum variation of information
+dQ(Ai,Aj) :=S(A i|Aj) +S(Aj|Ai) = 2S(AiAj)−S(A i)−S(A j)
+measures the symmetric entanglement cost of bidirectional quantum state merging between
+subsystems Ai and Aj. Unlike its classical Shannon counterpart—which is automatically a
+semimetric on the polymatroid conePOLYn—negative quantum conditional entropy allows
+dQ to break the triangle inequality even when every pairwise conditional entropyS(Ai|Aj)is
+nonnegative. Restricting to semimetric projections defines two nested hierarchies insideMETn:
+the classical/polymatroid chain CUTn ⊆SUB n ⊆VI n ⊆POLY n and the quantum chain
+Mcb,+
+n ⊆Mq,+
+n ⊆Mq
+n ⊆Qn := Πn(QCONEn)∩MET n.
+We establish the complete finite-party geometry and asymptotic obstruction theory of these
+cones through three main theorems, backed by exact rational certification and targeted zero-
+dependency Lean 4 kernel proofs. First, atn≤ 6, we determine the exact phase hierarchy:
+CUTn = METn forn≤4;CUT 5 ⊊SUB 5 = MET5 viaK 2,3 overF 2
+2; and atn= 6,
+CUT6 ⊊SUB 6 ⊆VI 6 ⊊POLY 6 ⊊Mcb,+
+6 =Mq,+
+6 = MET6,
+proved by enumerating all296extreme rays ofMET6 (8 S6-orbits, all realized inCB+
+6 ), all1736
+extreme rays ofPOLY6 = MET6 ∩{90 conjugates ofIK3,3−e ≥0}(12orbits), and a Zhang–
+Yeung non-Shannon separation on Orbit 9 (κPOLYZY
+6
+= 31/30). Second, via the Segre quadric
+Q+(3,Fq) ⊂F 2×2
+q , we prove a sharp bipartite dichotomy:Km,m ∈SUB 2m for every m≥ 1,
+whereas Km,m −e /∈POLY2m for every m≥ 3( κPOLY2m ≥9/8). Across all853connected
+7-vertex graphs, we isolate a transversal separation atRem #4( G800): it violates POLY7
+(κPOLY7 = 17/16) andCB7 (κCB7 = κCB+
+7
+= 13/12, via an elementary5-cycle inequalityF4 ≥0),
+yetembedsisometricallyin Mq,+
+7 . Third, wediscovertwominimaluniversalquantumobstructions
+amongthe853graphs— QFail1 (G708, κQ7 = 21/20)and QFail2 (G873, κQ7 = 41/40)—forbidding
+isometric quantum realization in any Hilbert space of any dimension whenever present as an
+induced submetric. Finally, for the matching-deleted bipartite graphsKm,m −M (n = 2m),
+exact Z2 ×Sm certification form= 3,..., 18reveals an odd/even parity staircase:κQ2m matches
+κPOLY2m at every evenmyet drops strictly below at every oddm≥ 5, while form≤ 18, κPOLY2m
+matches the partial sums1 +∑⌊(m+1)/2⌋
+k=3
+1
+2(k−1)!(k−1)(k−2) of a factorial step series converging to
+5−e
+2 (conjectured for allm).
+∗ORCID: 0009-0006-7494-9040; email:editor@airr.science. Manuscript licensed under CC-BY-4.0; verification
+code and Lean 4 proofs under MIT athttps://github.com/lluiseriksson/quantum-entropic-metric-geometry
+(tagv1.0.4).
+1
+AIRR.SCIENCE  ·  ARR-2026-4QVFJ65VWT9H5B8E v1  [Information theory]  28 Nov 2026
+
+--- Page 2 ---
+1 Introduction and Geometric Setup
+Information distances turn probabilistic and algorithmic dependence into metric geometry. Given
+two random variablesXi,Xj with finite Shannon entropy, Rajski’s variation of information [1]
+dH(Xi,Xj) :=H(X i|Xj) +H(Xj|Xi) = 2H(XiXj)−H(X i)−H(X j)(1)
+defines a canonical pseudometric whose Kolmogorov complexity analogue underpins the universal
+similarity distance of Bennett, Gács, Li, Vitányi, and Zurek [2], as well as modern metric formulations
+of algorithmic information distance by Hutter [9] and Hou [10]. Because Shannon entropy is monotone
+(H(XY) ≥H (Y)) and submodular (H(XY)+H(YZ) ≥H (XYZ )+H(Y)), everyn-tuple of random
+variables—indeed, every polymatroidh∈ Γn—automatically induces a semimetricdh ∈MET n.
+Classical information theory therefore sits comfortablyinsidethe metric cone.
+When random variables are replaced by subsystemsA0,...,A n−1 of ann-party quantum state
+ρA0···An−1 with von Neumann entropyS(X) = −Tr(ρX log2 ρX), the structural geometry changes
+fundamentally. Defining thequantum variation of informationby the same formula,
+dQ(Ai,Aj) :=S(A i|Aj) +S(Aj|Ai) = 2S(AiAj)−S(A i)−S(A j),(2)
+gives dQ a direct operational meaning: by the quantum state-merging protocol of Horodecki,
+Oppenheim, and Winter [6], S(Ai|Aj)is the asymptotic entanglement rate required to mergeAi
+into Aj, so dQ(Ai,Aj)is thebidirectional quantum state-merging costbetween parties i and j.
+Because entanglement makesS(Ai|Aj)negative on a Bell pair|Φ+⟩ij (where S(i) = S(j) = 1and
+S(ij) = 0, givingdQ(i,j) = −2), dQ need not even be nonnegative on general states. Remarkably,
+even if we enforce pairwise nonnegativityS(Ai|Aj) ≥0everywhere—eliminating obvious negative
+distances—entanglement still breaks the triangle inequality.
+Example 1.1(Nonnegative pairwise conditional entropies do not imply a metric).Consider the
+4-party entropy vector given by the tensor average of two classical bits and two Bell pairs:
+SCB+
+4
+:= 1
+4 cut({0}) + 1
+4 cut({2,3}) + 1
+4 |Φ+⟩01 + 1
+4 |Φ+⟩12,(3)
+where cut(T)distributes a single shared uniformly random classical bit toT⊊ [n]and |0⟩to[ n] \T
+(so Scut(T) (X) =1[ X∩T̸ = ∅]), and|Φ+⟩ab contributesSΦ+
+ab
+(X) =1[ |X∩{a,b}| = 1]. Explicitly, the
+4-resource tensor-product statecut({0}) ⊗cut ({2,3}) ⊗|Φ+⟩01 ⊗|Φ+⟩12 realizes4 SCB+
+4
+directly as
+a quantum von Neumann entropy vector, placing(3) in cone(Σ∗
+4)(and N-copy block normalization
+approaches (3) asymptotically in Σ∗
+4); alternatively, when an orthogonal classical mixture flag
+p= (1
+4 ,1
+4 ,1
+4 ,1
+4 )is broadcast to every partyA0,...,A n−1, every nonempty subset entropyS(X)shifts
+identically by+ H(p) = +2, which cancels identically in bothS(i|j) = S(ij) −S(j)and dQ(i,j).
+For (3), direct calculation yields4S({0}) = 4S({1}) = 4S({2}) = 2,4 S({3}) = 1, and pairwise joint
+entropies
+4S({0,1}) = 2,4S({1,2}) = 2,4S({0,2}) = 4,
+4S({0,3}) = 3,4S({1,3}) = 3,4S({2,3}) = 2.
+ThusS(i|j)≥0for all12ordered pairsi̸=j(withmin i̸=j S(i|j) = 0), yet
+dQ(0,1) = 0, d Q(1,2) = 0, d Q(0,2) = 1,
+violatingd Q(0,2)≤d Q(0,1) +d Q(1,2)(whiled Q(0,3) =d Q(1,3) = 3/4andd Q(2,3) = 1/4).
+2
+
+--- Page 3 ---
+Example 1.1 forces us to intersect entropic cones with the semimetric coneMETn. Let[ n] :=
+{0,...,n−1}and identify symmetric functionsd:
+([n]
+2
+)
+→Rwith vectors inR (n
+2).
+Definition 1.2(Entropic Metric Cones).Let METn ⊂R (n
+2) be the closed polyhedral cone of
+semimetrics (dij ≥0and dij + djk ≥d ik for all distinct i,j,k ). Define the linear projection
+Πn : R2n−1 →R (n
+2) by(Π nS)ij := 2S({i,j}) −S({i}) −S({j})(with S(∅) = 0). Inside METn, we
+study two nested families of closed convex cones:
+(a)Classical and polymatroid cones:CUT n ⊆SUB n ⊆VI n ⊆POLY n ⊆MET n, where:
+•CUT n is the conic hull of the2 n−1 −1cut semimetrics δT(i,j) :=1[ |T∩{i,j}| = 1]
+(∅̸= T⊊ [n]), with Deza–Laurent [12] providing the polyhedral foundations ofCUTn and
+METn;
+•SUB n is the closed conic hull ofΠn(S)arising from linear subspace rank functionsS(X) =
+dimFq (∑
+i∈X Vi)over finite fieldsF q;
+•VI n := Πn(Γ∗n) is the closure inR(n
+2) of all classical Shannon variation-of-information metrics;
+•POLY n := Πn(Γn), whereΓn ⊂R 2n−1 istheShannonpolymatroidconedefinedbymonotonic-
+ity (h([n])≥h([n]\{i})) and elemental submodularity (h(iK) +h(jK)≥h(ijK) +h(K)).
+(b)Quantum and entanglement cones:Mcb,+
+n ⊆Mq,+
+n ⊆Mq
+n ⊆Qn, where:
+•CB n := cone{cut(T) : ∅̸= T⊊ [n]}+cone{|Φ+⟩ij : 0 ≤i<j <n} in entropy space,CB+
+n :=
+{S∈CB n : S(i|j) ≥0 ∀i̸= j}, Mcb
+n := Πn(CBn)∩METn, andMcb,+
+n := Πn(CB+
+n)∩METn;
+•M q
+n := Πn(Σ∗n)∩MET n is the closure of all quantum dQ semimetrics, and Mq,+
+n :=
+Πn(Σ∗,+
+n )∩MET n, whereΣ ∗,+
+n :={S∈Σ ∗
+n :S(i|j)≥0∀i̸=j};
+•Qn := Π n(QCONEn) ∩MET n, where QCONEn is Pippenger’s basic quantum entropy
+cone [5] cut out by Lieb–Ruskai strong subadditivity (SSA) [11] and weak monotonicity
+(WM).
+For the polyhedral conesPOLYn = Πn(Γn), Qn = Πn(QCONEn) ∩MET n, Mcb
+n , andMcb,+
+n , linear
+projections are automatically closed by the Minkowski–Weyl theorem; by contrast, the classical and
+quantum entropic regionsΓ∗
+n andΣ ∗
+n have non-polyhedral closuresΓ∗n and Σ∗n (which are convex
+cones meetingker(Πn)nontrivially along R≥01and SGHZn), so closure is taken directly in metric
+space R(n
+2). Notice also that becauseΠn(Σ∗,+
+n ) ⊆Πn(Σ∗
+n)contains the interior point1 ∈int (METn)
+(realized byn independent fair classical bits) and the closures of quantum entropy projections are
+convex cones,Πn(Σ∗n)∩MET n = Πn(Σ∗n)∩MET n (and likewise forMq,+
+n ), soMq
+n coincides with
+the closure of all quantumdQ semimetrics. For any coneC⊆MET n and nonzerod∈MET n, the
+optimal multiplicative metric distortionofdintoCis
+κC(d) := inf
+{
+κ≥1 :∃d ′∈Csuch thatd ij ≤d′
+ij ≤κd ij ∀i<j
+}
+.
+For entropy conesE∈{CB n,CB +
+n}, we likewise writeκE(d) := κΠn(E) (d)for distortion into the
+unrestricted projectionΠ n(E); on all853connected7-vertex graphs, direct LP verification shows
+κCB7(G) =κMcb
+7
+(G)identically (andκ CB+
+7
+(Rem #4) =κ Mcb,+
+7
+(Rem #4) = 13/12).
+Throughout this paper we adhere to a maximal-strength asymmetry: everyachievabilityor
+realization theorem is proved inside the strongest pairwise-nonnegative cones (Mcb,+
+n or Mq,+
+n ),
+whereas everyimpossibilityor distortion lower bound is proved against the weakest outer cones
+3
+
+--- Page 4 ---
+(POLYn, Mcb
+n , orQn). Notice also that every cut and every Bell pair satisfies SSA and WM, so
+Mcb,+
+n ⊆Mcb
+n ⊆Qn; similarly,POLYn ⊆Qn because monotonicity plus submodularity implies both
+SSAandWM.Moreover, becauseeveryclassicalShannonentropyvector h∈ Γ∗
+n satisfiesmonotonicity
+H(Xi|Xj) ≥0, we haveΠn(Γ∗
+n) ⊆Πn(Σ∗,+
+n ) ∩MET n, so CUTn ⊆SUB n ⊆VI n ⊆Mq,+
+n holds
+unconditionally.
+Before analyzing specific dimensions, we record a clean4-line characterization ofQCONEn that
+eliminates all redundant inequalities in our exact linear programs and Lean 4 proofs.
+Proposition 1.3(Purification Reduction ofQCONE n).For everyn≥2,QCONE n is cut out by
+exactly
+(n
+2
+)
+2n−2 +n·2 n−2 elemental inequalities:
+S(iK) +S(jK)−S(ijK)−S(K)≥0 (i<j, K⊆[n]\{i,j}),(4)
+S(iK) +S(iL)−S(K)−S(L)≥0 (i∈[n], K⊔L= [n]\{i}, K <L).(5)
+Proof. Introduce a purifying systemE and extendS on[ n]to S∗on[ n] ∪{E} via S∗(X) = S(X)
+and S∗(X∪{E} ) = S([n] \X)for X⊆ [n](with S∗(∅) = S∗([n] ∪{E}) = 0). Any general weak
+monotonicity inequalityS(AB) + S(BC) ≥S (A) + S(C)on pairwise disjoint A,B,C⊆ [n]with
+D:= [n]\(ABC)rewrites identically as general SSA on(B,A,D∪{E})in[n]∪{E}:
+S∗(BA) +S∗(A(D∪{E}))−S ∗(BA(D∪{E}))−S ∗(A) =S(AB) +S(BC)−S(C)−S(A).
+Telescoping general SSA on[n] ∪{E} into elemental SSA inequalities on[n] ∪{E} and substituting
+S∗(X∪{E} ) = S([n] \X)sends every instance withE /∈{x,y}∪K or E∈K to (4), and every
+instance with E∈ {x,y} to (5). General subadditivity S(A) + S(B) ≥S (AB)( A∩B = ∅)
+follows by telescoping (4) over i∈A,j∈B ; applying subadditivity to the purified extension
+S∗(X) + S∗(([n] ∪{E}) \X ) ≥S ∗([n] ∪{E}) = 0then gives2 S(X) ≥0, so nonnegativity uses
+both (4) and (5).
+2 Theorem 1: Exact n≤ 6Phase Hierarchy and Entanglement
+Metric Universality
+Classical and quantum entropic metrics are indistinguishable forn≤ 4, diverge classically from cuts
+at n= 5, and explode into a five-stage separation atn= 6—where, remarkably, classical bits plus
+Bell pairs underS(i|j)≥0recover theentiremetric coneMET 6.
+Theorem 2.1(Exactn≤6Phase Hierarchy).The entropic metric cones satisfy:
+(1) For n≤ 4, all classical and quantum cones collapse toMETn: MET3 has3extreme rays (1
+orbit) andMET 4 has7extreme rays (2orbits), all cut metrics [12].
+(2) For n = 5, CUT5 ⊊SUB 5 = VI5 = POLY5 = Mcb,+
+5 = Mq,+
+5 = MET5. Specifically, MET5
+has25extreme rays in3 S5-orbits [12]:15cuts (sizes5 + 10) and10copies of the bipartite
+metricK 2,3, which is realized inSUB5 overF 2
+2.
+(3) Forn= 6, we have the strict phase hierarchy
+CUT6 ⊊SUB 6 ⊆VI 6 ⊊POLY 6 ⊊Mcb,+
+6 =Mq,+
+6 = MET6.(6)
+More precisely:
+4
+
+--- Page 5 ---
+(i)MET 6 has exactly296extreme rays forming8 S6-orbits of sizes(6 ,15,10,60,90,15,10,
+90)[ 12]. Orbits1–7lie in SUB6, Orbit8is K3,3 −e, and all8orbits (296rays) lie in CB+
+6 ,
+provingMcb,+
+6 =Mq,+
+6 = MET6.
+(ii) On POLY6, K3,3 −e (with bipartitionA= {0,1,2},B = {3,4,5}and missing edge(2,5))
+satisfies the facet inequality
+IK3,3−e(d) := 2
+∑
+e∈E(K3,3−e)
+d(e)−
+∑
+p∈(A
+2)∪(B
+2 )
+d(p)−2d(2,5)≥0,
+certified by an exact integer10-orbitD4-symmetrized Shannon Farkas identity, with exact
+optimal distortionκPOLY6(K3,3 −e) = 9/8.
+(iii) Intersecting MET6 with the90 S6-conjugates ofIK3,3−e(d) ≥0yields a pointed cone with ex-
+actly1736extreme rays in12 S6-orbits of sizes(6,15,10,60,90,15,10,90,360,360,360,360).
+Every one of the12orbits admits an exact rational polymatroid inΓ6, provingPOLY6 =
+MET6 ∩{90conjugates ofI K3,3−e ≥0}.
+(iv) Let POLYZY
+6 := Π6(Γ6 ∩ZY 6)denote the projection ofΓ 6 intersected with all1680 S6-
+permuted Zhang–Yeung non-Shannon inequalities [3]. Orbit9(size360) separates VI6 from
+POLY6 with exact distortionκPOLYZY
+6
+(Orbit 9) = 31/30, while Orbits1–8and10–12satisfy
+all1680Zhang–Yeung inequalities ( κPOLYZY
+6
+= 1). Moreover, Orbit9admits an explicit
+6-atom realization inCB+
+6 .
+(v) Among all112connected6-vertex graphs,110embed isometrically into POLY6, and exactly
+2fail POLY6: K3,3 −e (G154, κPOLY6 = 9/8) and G168 (κPOLY6 = 17/16); both embed
+isometrically intoMcb,+
+6 .
+Proof. We establish each stage via exact rational polyhedral geometry and explicit algebraic
+witnesses.
+Stage n≤ 5.Exact GMP Double Description (cdd.gmp) of the defining inequalities ofMETn
+yields3cut rays (1orbit) for n= 3,7cut rays (2orbits of sizes4 ,3) forn= 4, and25extreme rays
+(3orbits of sizes5 ,10,10) forn= 5. The sole non-cut orbit atn= 5is the shortest-path metric
+of K2,3 with parts{0,4}and {1,2,3}. Assigning party0the zero subspace {0}≤F 2
+2, party4the
+full spaceF2
+2, and parties1,2,3the three distinct1-dimensional lines ⟨(1,0)⟩,⟨(0,1)⟩,⟨(1,1)⟩≤F 2
+2
+gives d(0,4) = 2(2) −0 −2 = 2, d(0,i) = 2(1) −0 −1 = 1, d(4,i) = 2(2) −2 −1 = 1, and
+d(i,j) = 2(2) −1 −1 = 2for1 ≤i < j≤ 3, proving K2,3 ∈SUB 5. Because CUT5 ⊊SUB 5 ⊆
+VI5 ⊆POLY 5 ⊆MET 5 and SUB5 ⊆VI 5 ⊆Mq,+
+5 ⊆Mq
+5 ⊆Q5 ⊆MET 5, this immediately collapses
+SUB5 = VI5 = POLY5 = Mq,+
+5 = Mq
+5 = Q5 = MET5. To prove thatMcb,+
+5 also equalsMET5, we
+directly exhibit an explicit5-atom witness inCB+
+5 forK 2,3 on{0,4}⊔{1,2,3}:
+S
+CB+
+5
+K2,3 := 1
+2 cut({3}) + 1
+2 cut({0,1,3,4}) + cut({2,3,4}) + 1
+2
+(
+|Φ+⟩02 +|Φ +⟩03
+)
+,
+whose singletons are(3
+2 ,1
+2 ,3
+2 ,5
+2 ,3
+2 )with mini̸=j S(i|j) = 0 ≥0and all10pairwise distances equal to
+dK2,3, provingK2,3 ∈Mcb,+
+5 and henceMcb,+
+5 =Mq,+
+5 = MET5.
+Stage n= 6: MET6 extreme rays andSUB6 ∪Mcb,+
+6 .Exact GMP Double Description ofMET6
+yields296primitive integer extreme rays partitioned into8 S6-orbits (Table 1). Orbits1–3are the
+31classical cut metrics. Orbits4and5collapse one vertex pair ( d01 = 0) onto theK2,3 realization
+over F2
+2. Orbit6is K2,4, realized overF2
+3 by assigning party0to {0}, party5to F2
+3, and parties
+5
+
+--- Page 6 ---
+n = 6 (Entanglement Universality)
+Mcb; +
+6 = Mq; +
+6 = MET6
+296 rays, 8 S6-orbits
+All 296 in CB +
+6
+POLY6 = MET6 \
+©
+90 IK3; 3 ¡ e
+ª
+1736 rays, 12 S6-orbits
+(2/112 graphs fail: 9/8, 17/16)
+SUB6 µ VI6 ⊊ POLY6
+Orbit 9 fails ZY98 (∙ = 31=30)
+yet lies in CB +
+6
+CUT6 ⊊ SUB6
+31 cut rays vs. Orbits 4-7
+(K2; 3; K2; 4; K3; 3)
+K3; 3 ¡ e (9
+8)
+Orbit 9 (31
+30)
+K2; 3 (2
+2)
+n = 7 (Transversal Split & Obstructions)
+Q7 = QCONE7 \ MET7  (851 / 853 graphs)
+14 Rem in Q7 ∖ (POLY7 [ Mcb
+7 ) (6 in cuts/Bell/GHZ/4
+2-spread)
+Outside Q7: Universal Obstructions (n ¸ 7)
+QFail1 (G708): ∙Q7 = 21
+20   |   QFail2 (G873): ∙Q7 = 41
+40
+n ∙ 4: CUTn = METn
+n = 5: CUT5 ⊊ SUB5 = MET5
+(a) Entropic Metric Cone Phase Hierarchy (n = 6 vs. n = 7)
+Mq; +
+7  (quantum, S(ijj) ¸ 0)
+Rem #4 (G800)
+∙POLY = 17
+16; ∙CB + = 13
+12; ∙q; + = 1
+Mcb; +
+7
+µ Mcb
+7 \ Mq; +
+7
+POLY7
+112 fail
+CB7 only
+Mcb
+7
+22 fail POLY7 only
+703 in
+\
+0 1 2
+3 4 5
+∙POLY6 = 9
+8; ∙CB +
+6
+= 1
+K3; 3 ¡ e (n = 6, G154)
+0
+5 6
+1
+2
+3
+4
+∙POLY = 17
+16; ∙CB + = 13
+12; ∙q; + = 1
+Rem #4 (n = 7, G800)
+0
+3 4
+1
+2
+5
+6
+∙POLY = 9
+8; ∙CB = 7
+6; ∙Q7 = 21
+20
+QFail1 (n = 7, G708)
+0
+3 4
+1 2
+5 6
+∙POLY = 9
+8; ∙CB = 7
+6; ∙Q7 = 41
+40
+QFail2 (n = 7, G873)
+(b) Four Canonical Extremal Witness Graphs
+Figure 1: The entropic metric cone phase hierarchy at n = 6and n = 7(panel a) and the
+four canonical extremal witness graphs (panel b) separatingPOLY6 from Mcb,+
+6 , establishing
+Rem #4 ∈ Mq,+
+7 \(POLY7 ∪Mcb
+7 )inside Q7, and separating QFail1,QFail2 from the outer
+quantum coneQ7.
+1,2,3,4to the four lines ofP1(F3)( ⟨(1,0)⟩,⟨(0,1)⟩,⟨(1,1)⟩,⟨(1,2)⟩). Orbit7is K3,3, realized overF4
+2
+by the Segre quadricQ+(3,F2)(proved in general in Section 3). Hence Orbits1–7all lie inSUB6.
+Remarkably, solving the exact rational cone-membership linear program over the62classical cuts
+and15Bell pairs subject toS(i|j) ≥0(30constraints) succeeds with κ= 1on all8orbits—including
+Orbit8( K3,3 −e), which with bipartitionA = {0,1,2},B = {3,4,5}and missing edge(2,5)is
+realized cleanly inCB+
+6 by
+1
+2 cut({2}) + 1
+2 cut({0,1,2,3,4}) + cut({0,3,5})
++ 1
+2
+(
+|Φ+⟩13 +|Φ +⟩15 +|Φ +⟩23
+)
+.
+Since CB+
+6 is S6-invariant and convex, all296extreme rays of MET6 lie in Mcb,+
+6 , establishing
+Mcb,+
+6 =Mq,+
+6 = MET6.
+The D4-symmetrized Farkas certificate forIK3,3−e ≥0.Relabeling Row 8 to A= {0,1,2},
+B = {3,4,5}, and missing edge(2,5), the automorphism groupAut(K3,3 −e) ∼= D4 of order8is
+generated by(0 1),(3 4), and the bipartition swap(0 3)(1 4)(2 5). Partitioning the246elemental
+Shannon inequalities ofΓ 6 into D4-orbits yields54orbits; Table 2 exhibits an exact positive
+integer combination of10 D4-orbits whose summed left-hand side equalsΠT
+6 cK3,3−e identically
+on all63nonempty subsets of[6], where cK3,3−e assigns+2to each of the8edges, −1to each
+of the6same-side pairs, and −2to(2 ,5). Thus IK3,3−e(d) ≥0holds on all of POLY6. On
+dK3,3−e, the positive terms sum to2·8 = 16while the negative terms sum to6 ·2 + 2 ·3 = 18,
+forcing κPOLY6(K3,3 −e) ≥18/16 = 9 /8(also kernel-certified in Lean 4, Theoremk33e_poly6_
+distortion_ge_9_8). Conversely, define the explicit D4-symmetric function h : 2 [6] →Q ≥0
+(h(∅) = 0, p := |X∩A| , q := |X∩B| ) by h(X) := 3if {2,5} ⊆X, and for {2,5} ̸⊆X by
+h(X) := 3 /2if |X| = 1;33 /16if( p,q) = (1 ,1);5 /2if {p,q} = {2,0};21 /8if {p,q} = {2,1};
+6
+
+--- Page 7 ---
+Table 1: CompleteS6-orbit classification of the296extreme rays ofMET6 and the4additional new
+orbits ofPOLY6 = MET6 ∩{90 conjugates ofIK3,3−e ≥0}(1736total rays). Row 8’s canonical
+representative has bipartition{0,4,5}⊔{1,2,3}with missing edge(3,5).
+Orbit Size Representatived(pairs01,02,...,45) Geometric Type∈SUB 6?κ POLY6 κPOLYZY
+6
+1 6(0,0,0,0,1,0,0,0,1,0,0,1,0,1,1)Cut(1+5)Yes (F 2)1 1
+2 15(0,0,0,1,1,0,0,1,1,0,1,1,1,1,0)Cut(2+4)Yes (F 2)1 1
+3 10(0,0,1,1,1,0,1,1,1,1,1,1,0,0,0)Cut(3+3)Yes (F 2)1 1
+4 60(0,1,1,1,2,1,1,1,2,2,2,1,2,1,1)CollapsedK 2,3 Yes (F2
+2)1 1
+5 90(0,1,1,2,2,1,1,2,2,2,1,1,1,1,2)CollapsedK 2,3 Yes (F2
+2)1 1
+6 15(1,1,1,1,2,2,2,2,1,2,2,1,2,1,1)K 2,4 (P1(F3)) Yes (F 2
+3)1 1
+7 10(1,1,1,2,2,2,2,1,1,2,1,1,1,1,2)K 3,3 (Q+(3,F2)) Yes (F 4
+2)1 1
+8 (MET6) 90(1,1,1,2,2,2,2,1,1,2,1,1,1,3,2)K 3,3 −eNo9/8–
+8 (POLY6) 90(1,1,1,2,2,2,2,1,1,2,1,1,1,2,2)TruncatedK 3,3 −e–1 1
+9 (POLY6) 360(1,1,2,3,3,2,3,2,2,3,2,4,1,1,2)ZY98-violating rayNo131/30
+10 (POLY6) 360(1,2,2,4,4,3,3,3,5,4,2,2,2,2,4)Facet ray –1 1
+11 (POLY6) 360(2,2,3,4,5,4,5,2,3,5,6,3,3,2,5)Facet ray –1 1
+12 (POLY6) 360(3,3,3,4,6,6,6,3,3,6,3,3,7,3,6)Facet ray –1 1
+Table 2: Exact integer10-orbitD4-symmetrized Shannon Farkas proof ofIK3,3−e(d) ≥0on POLY6
+(whereI(i:j|K) =h(iK) +h(jK)−h(ijK)−h(K)≥0).
+Orbit Mult. WeightyRepresentative Inequality Orbit Mult. WeightyRepresentative Inequality
+0 8 2I(0 : 2|{3})≥036 4 1I(0 : 2|{1,3,4,5})≥0
+8 2 2I(0 : 1|{3,4})≥043 4 1I(0 : 3|{2,5})≥0
+17 4 2I(0 : 1|{3,5})≥044 4 2I(0 : 1|{2,3,5})≥0
+26 4 1I(0 : 2|{1,3,4})≥047 4 3I(0 : 3|{1,2,4,5})≥0
+27 4 1I(2 : 5|{0,1,3})≥048 4 4h([6])−h([6]\{0})≥0
+11/4if( p,q) = (2 ,2); and23 /8when max(p,q) = 3. Verifying all246elemental inequalities (6
+monotonicity and240submodularity, checked in code/verify_quantum_entropic_metrics.py)
+confirms h∈ Γ6, whileΠ 6(h)assigns9 /8to every edge ofK3,3 −e,2to every same-side pair, and3
+to(2,5), satisfyingd K3,3−e ≤Π 6(h)≤ 9
+8 dK3,3−e and provingκPOLY6(K3,3 −e) = 9/8.
+Exact Double Description ofPOLY6 and Orbit 9 non-Shannon separation.Using exact
+integer Fukuda–Prodon Double Description starting from the296rays ofMET6 and intersecting
+sequentially with the90 S6-conjugates of IK3,3−e(d) ≥0, we obtain1736primitive integer rays
+in12 S6-orbits (Table 1), each verified independently to satisfy all150inequalities and achieve
+tight-constraint rank14 = dim MET6 −1. Solving the exact rational LPh∈ Γ6,Π6(h) = d for each
+of the12orbit representatives succeeds withκ= 1, provingPOLY 6 = MET6 ∩{90}.
+Testing all12orbit representatives against the1680 S6-permuted Zhang–Yeung inequalities [3],
+2I(C:D)≤I(A:B) +I(A:CD) + 3I(C:D|A) +I(C:D|B),
+over all disjoint nonemptyA,B,C,D⊂ [6], Orbits1–8and10–12achieve κ= 1, whereasOrbit9
+fails with exact distortionκPOLYZY
+6
+(Orbit9) = 31/30: dual weights1/60on the two Zhang–Yeung
+instances( A,B,C,D ) = ( {2},{5},{1},{4})and( {5},{2},{1},{4})combined with32elemental
+Shannon terms satisfyα·d Orb9 = 31/30and β·d Orb9 = 1(clearing denominators yields an integer
+inequality c9 ·d≥ 0evaluating to −4on Orbit9). Since VI6 ⊆POLY ZY
+6 , this strictly separates
+VI6 ⊊POLY 6. Meanwhile, Orbit9lies inCB +
+6 via the explicit6-atom entropy vector inCB+
+6
+2 cut({0,1,2}) + 1
+2 cut({5}) + 1
+2 cut({0,1,3,4,5}) + 1
+2 |Φ+⟩14 + 1
+2 |Φ+⟩15 + 1
+2 |Φ+⟩24.
+7
+
+--- Page 8 ---
+Finally, checking all112connected6-vertex graphs in exact rational arithmetic confirms that
+110embed isometrically into POLY6 while onlyG154 (K3,3 −e, κPOLY6 = 9/8) andG168 (edges
+{(0,2),(0,3),(0,5),(1,2),(1,3),(2,3),(2,4),(3,4),(4,5)}, κPOLY6 = 17/16) fail; both lie inMcb,+
+6 .
+3 Theorem 2: Hyperbolic-Quadric Dichotomy andn = 7Transver-
+sal Separation
+At n= 7, the inclusionPOLY6 ⊊Mcb,+
+6 shatters into genuine transversal incomparability: classical
+polymatroids and classical-plus-Bell entanglement separate in opposite directions, while full bipartite
+entanglement with linear subspace atoms contains both on our benchmark witness.
+Theorem 3.1(Hyperbolic-Quadric Dichotomy andn= 7Separation).
+(1) Segre Quadric Dichotomy:For every prime powerq and every1 ≤m≤q + 1, the two
+opposite reguli of the hyperbolic quadricQ+(3,Fq) ⊂F 2×2
+q realize the complete bipartite metric
+Km,m ∈SUB 2m ⊆VI 2m; because arbitrarily large prime powersq exist, Km,m ∈SUB 2m holds
+for every m≥ 1. By contrast, for every m≥ 3, deleting a single edge breaks polymatroid
+realizability:K m,m −e /∈POLY2m, withκPOLY2m(Km,m −e)≥9/8.
+(2) Exhaustive n= 7Graph Partition:Across all853connected7-vertex graphs,38fail POLY7,
+128fail CB7,16fail both POLY7 and CB7, and exactly2( QFail1 = G708, QFail2 = G873)
+fail Q7, leaving703in POLY7 ∩Mcb
+7 ,112in POLY7 \Mcb
+7 ,22in Mcb
+7 \POLY 7, and14in
+Q7 \(POLY 7 ∪Mcb
+7 ).
+(3) Bipartite-vs-Subspace Separation atRem #4:The7-vertex graph Rem #4( G800, index4
+of the14remaining graphs, edge set {(0,5),(0,6),(1,5),(1,6),(2,3),(2,5),(2,6),(3,4),(4,5),
+(4,6),(5,6)}) satisfies:
+(i)Rem #4/∈POLY 7, with exact Farkas-certified distortionκPOLY7(Rem #4) = 17/16;
+(ii)Rem #4/∈M cb
+7 (even withoutS(i|j)≥0), certified by the elementary5-cycle inequality
+F4(d) :=
+∑
+x∈{0,1,2,3,4}
+(
+d(x,5) +d(x,6)
+)
+−d(5,6)−
+∑
+e∈C5
+d(e)≥0(7)
+where C5 = {(0,3),(3,1),(1,2),(2,4),(4,0)}, satisfying mincuts F4 = 0over all126cuts,
+minBell F4 = 0over all21Bell pairs, F4(dRem#4) = −1, and exact distortionsκCB7 =
+κCB+
+7
+= 13/12onRem #4;
+(iii)Rem #4 ∈Mq,+
+7 isometrically (κ= 1), realized by an explicit binary-qubit state combining
+|Φ+⟩34, a private bit, anF2
+2 atom, and anF4
+2-spreadK2,4 subspace atom withmini̸=j S(i|j) =
+0≥0.
+Consequently,POLY7 and Mcb
+7 (as well asMcb,+
+7 ) are incomparable, andMq,+
+7 ̸⊆POLY 7∪Mcb
+7
+(witnessed byRem #4∈M q,+
+7 \(POLY 7 ∪Mcb
+7 )).
+Proof. Part (1): Segre QuadricQ+(3,Fq).Identify F4
+q with the spaceF2×2
+q of2 ×2matrices over
+Fq. For each projective pointu= [u0 : u1] ∈P 1(Fq)( q+ 1points in total), define the2-dimensional
+left-regulus and right-regulus subspaces
+Lu :=
+{
+xuT :x∈F 2
+q
+}
+, M v :=
+{
+vyT :y∈F 2
+q
+}
+.
+8
+
+--- Page 9 ---
+If u̸= u′in P1(Fq), any matrixA∈L u ∩Lu′ has row space contained inspan(u) ∩span (u′) = {0},
+so Lu ∩Lu′ = {0}and dim(Lu + Lu′) = 4(verified algebraically over an arbitrary field in Lean 4,
+segre_same_regulus_disjoint). Likewise Mv ∩Mv′ = {0}for v̸ = v′. Conversely, for any
+pair( u,v) ∈P 1(Fq)2, every matrixA∈L u ∩Mv has row space inspan(u)and column space in
+span(v), soLu∩Mv = span(vuT)is exactly1-dimensional ( segre_opp_regulus_rank_one), giving
+dim(Lu + Mv) = 2 + 2 −1 = 3. Measuring entropy in units of2log2 q (dividing rank by2), the
+2(q+ 1)subspaces{L u},{Mv}yield
+d(Lu,Lu′) =d(Mv,Mv′) = 1
+2 (2·4−2−2) = 2, d(L u,Mv) = 1
+2 (2·3−2−2) = 1,
+realizing Kq+1,q+1 ∈SUB 2q+2, and restricting tom≤q + 1points per regulus givesKm,m ∈SUB 2m.
+For the fracture converse (m≥ 3), any missing edgee= (a,b)in Km,m −e lies inside an induced
+3 + 3subgraph on A′⊔B ′ containing a∈A ′,b∈B ′. Because Km,m −e has diameter3and
+d(u,v) = 1,d(u,u′) = 2,d(a,b) = 3on A′⊔B′, this6-vertex restriction is isometric toK3,3 −e, so
+Theorem 2.1 givesκPOLY2m(Km,m −e)≥9/8.
+Part (2): Exhaustiven= 7graph classification.Using exact rational linear programming
+(DomainMatrix over Q) across all853connected7-vertex graphs in the Graph Atlas confirms the
+exact counts(38,128,16,2)in POLY7, CB7, POLY7 ∩CB 7 failures, andQ7 failures, respectively
+(Figure 2a).
+Part (3): Proof ofRem #4separation.Exact Farkas dual certification yieldsκPOLY7(Rem #4) =
+17/16(with a44-term Shannon proof). To proveRem #4/∈CB 7, evaluateF4 from (7) directly:
+• All126classical cuts δT:If5 ,6lie on the same side of the cut (d(5,6) = 0), then for each
+x∈{ 0,..., 4}, d(x,5) +d(x,6) = 21[ xseparated from{5,6}], while each separated vertex inC5
+contributes at most2cut edges of C5, soF4(δT) ≥0. If5 ,6lie on opposite sides (d(5,6) = 1),
+then d(x,5) + d(x,6) = 1for all five x, giving ∑
+x(d(x,5) + d(x,6)) = 5; meanwhile an odd
+5-cycleC 5 can have at most4cut edges, soF4(δT)≥5−1−4 = 0.
+• All21Bell pairs |Φ+⟩ab:Recall dΦ+
+ab
+(i,j) = −2for {i,j} = {a,b},+1if |{i,j}∩{a,b}| = 1, and
+0otherwise. Checking the four S2 ×D5 orbits of{a,b}: for {5,6}, F4 = 10 −(−2) −0 = 12; for
+{a,b}with a∈{ 5,6},b∈C 5, F4 = (−1+4) −1−2 = 0; forab∈E (C5), F4 = 4−0−(−2+2) = 4;
+and for non-adjacenta,b∈C 5,F 4 = 4−0−4 = 0.
+Both exhaustive checks are also kernel-verified over all128bitmasks and21pairs in Lean 4
+(F4_nonneg_on_all_128_cuts, F4_nonneg_on_all_21_bells). On dRem#4, vertices0 ,1,2,4are
+adjacent to{5,6}while vertex3sits at distance2from {5,6}; onC5,(2 ,3)and(3 ,4)are edges,
+(0,4),(1,2),(2,4)have distance2, and(0,3),(1,3)have distance3, while(5,6)is an edge. Thus
+F4(dRem#4) = (8·1 + 2·2)−
+(
+1 + (3 + 3 + 2 + 2 + 2)
+)
+= 12−13 =−1,
+forcing κCB7(Rem #4) ≥13/12, which is matched by an explicitCB+
+7 primal realization (κCB7 =
+κCB+
+7
+= 13/12).
+Finally, to realizeRem #4isometrically in Mq,+
+7 , recall thatF4
+2 ∼= F2
+4 admits a2-spread of
+five mutually disjoint2-planes W0,W1,W2,W3,W4 ≤F 4
+2 (the five points of P1(F4), satisfying
+Wa ∩Wb = {0}and Wa + Wb = F4
+2 for a̸= b). Define the4-atom binary-qubit / classical-subspace
+state
+SRem#4(X) := 1
+4
+(
+2S|Φ+⟩34(X) + 2Sbit(3)(X) + 2SF2
+2
+(X) +SF4
+2
+(X)
+)
+,(8)
+where:
+9
+
+--- Page 10 ---
+•S F2
+2
+assigns(0,1,2,3)↦→(⟨e 1⟩,⟨e2⟩,⟨e1 +e2⟩,⟨e1 +e2⟩)and(4,5,6)↦→{0}inF 2
+2;
+•S F4
+2
+assigns(0 ,1,2,3,4,5,6) ↦→(W0,W1,W2,W2,W4,F4
+2,{0})in F4
+2 (a K2,4-spread atom with
+2,3glued toW 2).
+Clearing the factor1 /4realizes4 SRem#4 by an exact finite tensor product of two Bell pairs on
+(3,4), two private classical bits at party3, two copies of F2
+2, and one copy of F4
+2. Checking
+all21pairs reproduces dRem#4 identically (with singletons S(i) = (1 ,1,1,2,1,1,0)and total
+entropy S([7]) = 5 /2), and every ordered pairi̸= j satisfies S(i|j) ≥0(minimum0), proving
+Rem #4∈M q,+
+7 .
+4 Theorem 3: Universal Quantum Obstructions and theKm,m −M
+Parity Staircase
+While Mq,+
+7 absorbs Rem #4and all but2of the853connected7-vertex graphs, those remaining2
+graphs break even the outer quantum coneQ7—and thereby induce universal obstructions across
+all n≥ 7. Pushing further to bipartite graphs with a removed matchingKm,m −M exposes an
+unexpected parity oscillation between polymatroids and quantum states.
+Theorem 4.1(Universal Obstructions and theKm,m −MParity Staircase).
+(1) Universal Quantum Impossibility (n≥ 7):Among all853connected7-vertex graphs,
+exactly two failQ7:
+•QFail1 (G708), edges{(0,3),(0,4),(1,2),(1,3),(1,4),(2,5),(3,5),(3,6),(4,5),(4,6)}, with
+exact Farkas-certified distortionκQ7(QFail1) = 21/20(andκ POLY7 = 9/8,κ CB7 = 7/6);
+•QFail2 (G873), edges{(0,3),(0,4),(1,2),(1,5),(1,6),(2,5),(2,6),(3,5),(3,6),(4,5),(4,6)},
+with exact Farkas-certified distortionκQ7(QFail2) = 41/40(and κPOLY7 = 9/8, κCB7 = 7/6).
+By isometric restriction, no metric space(X,d)of any cardinalityn≥ 7containing an isometric
+copy ofQFail1orQFail2can be realized by any quantum state in any Hilbert space.
+(2) The Km,m−M Matching Barrier (m= 5,n = 10):On K5,5 −M, an exact15-orbit Z2 ×S5
+SSA+WM identity certifies the valid quantum metric inequality (per-pair weights(11,−8,−3))
+11
+∑
+r̸=s
+d(ar,bs)−8
+4∑
+r=0
+d(ar,br)−3
+∑
+{u,u′}∈(A
+2)∪(B
+2 )
+d(u,u′)≥0 (onQ 10),(9)
+yielding the strict triple separation
+12
+11 =κQ10(K5,5 −M)< 9
+8 =κPOLY10(K5,5 −M)< 4
+3 =κCUT10(K5,5 −M).
+(3) Exact Odd/Even Parity Staircase (m= 3,..., 18):For all m= 3,..., 18( n= 2m), exact
+rationalZ 2 ×Sm primal and dual certification gives the values in Table 5. In particular:
+•For everyevenm∈{4,6,...,18},κ Q2m(Km,m −M) =κ POLY2m(Km,m −M).
+•For everyoddm∈{5,7,...,17},κ Q2m(Km,m −M)<κ POLY2m(Km,m −M).
+10
+
+--- Page 11 ---
+1.00 1.02 1.04 1.06 1.08 1.10 1.12 1.14
+Polymatroid distortion ∙POLY7
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+1.25Classical+Bell distortion ∙CB7
+703 graphs: (1; 1)
+112 fail CB7 only
+(∙CB 2 [15
+14; 5
+4])
+22 fail POLY7 only
+(∙POLY 2
+©17
+16; 9
+8
+ª
+)
+Rem #4 (G800) + 4 others
+(17
+16; 13
+12); ∙Q7 = 1
+(∙q; + = 1 for 3/5: G800, G956, G957)
+QFail1 (G708, 21
+20)
+QFail2 (G873, 41
+40)
++ G874 (Q7: 1)
+(a) Exhaustive Atlas of All 853 Connected 7-Vertex Graphs
+0 1 2 3 4 5
+Number of pairs / singletons k (m = 5)
+0.0
+0.5
+1.0
+1.5
+2.0
+2.5
+3.0
+3.5Optimal entropy profile S
+71
+22 > 3
+Purification: S([10]) = 0
+(b) Why Odd m = 5 Breaks the POLY10 Barrier
+Monotone ceiling S([10]) ∙ 3
+POLY10 one-sided S(0; k; 0) (∙ = 9
+8)
+Q10 one-sided S(0; k; 0) (∙ = 12
+11)
+Q10 pure full-pair S(k; 0; 0)
+Non-monotone entropy hump ( > 3)
+Figure 2: (a) Complete distortion atlas of all853connected7-vertex graphs in( κPOLY7,κCB7)
+coordinates. (b) Comparison of the optimal entropy profiles along one bipartition sideS(0,k, 0)
+and full-pair subsetsS(k,0,0)at m = 5( n = 10): omitting monotonicity allowsQ10 to form a
+pure-state entropy hump exceeding3before purifying toS([10]) = 0, droppingκQ10 = 12/11below
+κPOLY10 = 9/8.
+•Across allm= 3,...,18,κ POLY2m(Km,m −M)obeys the exact factorial step series
+κPOLY2m(Km,m −M) = 1 +
+⌊(m+1)/2⌋∑
+k=3
+1
+2(k−1)!(k−1)(k−2) ,(10)
+whose infinite limit evaluates in closed form to5−e
+2 ≈1.14085908577.
+Proof. Part (1): Isometric restriction andQFail1, QFail2.If ι : [k] ↪→[n]is an isometric
+embedding of(Y,d Y)into(X,d), any metricd ′∈Qn withd≤d ′≤κdlifts to an abstract entropy
+vector S∈QCONE n withΠ n(S) = d′. By definition,QCONEn is cut out by strong subadditivity
+and all weak monotonicity inequalitiesS(A) + S(B) ≥S (A\B ) + S(B\A )( A,B⊆ [n]), which by
+Proposition 1.3 are equivalent to(4)–(5). Restricting S to subsets ofι([k])retains the sub-family of
+SSA and WM inequalities supported onι([k]), soS|ι([k]) ∈QCONE k (verified formally in Lean 4,
+isometric_restriction_preserves_qcone) andΠ k(S|ι([k])) =d′|ι([k]). ThusκQk(dY)≤κ Qn(d).
+ForQFail1 (G708), exact basis inversion produces a36-term integer Farkas identity (30elemental
+SSA and6elemental WM inequalities) proving α·d G708 = 42and β·d G708 = 40, soκQ7(QFail1) ≥
+42/40 = 21/20(kernel-certified in Lean 4,qfail1_q7_distortion_ge_21_20). Conversely, the left
+half of Table 3 lists an explicitAut(G708)-symmetric pure-state rational primalS1 ∈QCONE 7
+(40 S1(X) ∈Z , S1([7]) = 0, S1(X) = S1([7] \X )) verified incode/verify_quantum_entropic_
+metrics.py against all896elemental SSA+WM inequalities (672SSA+ 224WM from Proposi-
+tion 1.3) and achievingdG708 ≤Π7(S1) ≤21
+20 dG708 (e.g., dQ(0,3) = (2 ·95 −67 −81)/40 = 21/20),
+provingκQ7(QFail1) = 21/20.
+For QFail2 (G873), its Z3
+2 automorphism group (1 ↔2,3 ↔4,5 ↔6) yields a completely
+symmetric46-term integer Farkas identity (36SSA and10WM terms) certifying the Q7-valid
+11
+
+--- Page 12 ---
+Table 3: Explicit matching pure-stateAut(G)-symmetric rational primals inQCONE7 for QFail1
+(G708, left,40 S1(X) ∈Z , κ≤ 21/20) andQFail2 (G873, right,80 S2(X) ∈Z , κ≤ 41/40) across
+all26complementary orbit pairs (S([7]) = 0, S(X) = S([7] \X)). Both satisfy all896elemental
+SSA+WM inequalities of Proposition 1.3.
+QFail1(G708)QFail2(G873)
+Rep.XMult.40S 1(X)Rep.XMult.80S 2(X)
+{0}4 67{0}2 98
+{1}4 81{1}4 142
+{0,1}8 114{0,1}4 240
+{2}2 53{1,2}2 182
+{0,2}4 120{0,1,2}2 240
+{1,2}4 88{3}4 166
+{0,1,2}8 118{0,3}4 173
+{3}4 81{1,3}8 234
+{0,3}8 95{0,1,3}8 238
+{1,3}8 102{1,2,3}4 234
+{0,1,3}16 116{3,5,6}4 238
+{2,3}4 109{3,4}2 246
+{0,2,3}8 123{0,3,4}2 236
+{1,2,3}8 109{1,3,4}4 246
+{3,4}2 121{1,5,6}4 236
+{0,3,4}4 116{0,5,6}2 246
+{1,3,4}4 123{5,6}2 236
+{2,3,4}2 131{5}4 156
+{0,1,5}4 126{0,5}4 209
+{0,1,6}4 130{1,5}8 190
+{1,5}2 121{0,1,5}8 243
+{1,2,5}2 111{1,2,5}4 209
+{1,3,5}4 123{3,4,5}4 243
+{0,3,6}4 109{3,5}8 202
+{0,2,6}2 125{0,3,5}8 209
+{0,6}2 107{1,3,5}16 236
+inequality
+5
+∑
+u∈{3,4}
+(
+d(u,5) +d(u,6)
+)
++ 3
+∑
+v∈{1,2}
+(
+d(v,5) +d(v,6)
+)
++ 2
+(
+d(0,3) +d(0,4)
+)
++d(0,5) +d(0,6)
+−5d(5,6)−2d(3,4)−d(1,2)−3
+(
+d(0,1) +d(0,2)
+)
+−
+∑
+v∈{1,2}
+u∈{3,4}
+d(v,u)≥0.
+On dG873, the positive terms evaluate to40and the negative terms evaluate to41, giving
+κQ7(QFail2) ≥41/40(kernel-certified in Lean 4,qfail2_q7_distortion_ge_41_40). Conversely,
+the right half of Table 3 gives an explicitZ3
+2-symmetric pure-state rational primalS2 ∈QCONE 7
+(80 S2(X) ∈Z , S2([7]) = 0, S2(X) = S2([7] \X)) satisfying all896elemental SSA+WM inequalities
+(672SSA+ 224WM) and dG873 ≤Π7(S2) ≤41
+40 dG873 (for example,dQ(0,3) = (2·173−98−166)/80 =
+41/40and dQ(1,2) = (2 ·182 −142 −142)/80 = 1), completing the proof thatκQ7(QFail2) = 41/40.
+Part (2): Symmetry reduction and them= 5certificate.Let Km,m−M have bipartitionA=
+{a0,...,a m−1}, B = {b0,...,b m−1}, and missing matchingM = {(ar,br)}m−1
+r=0 . Its automorphism
+groupG=Z 2 ×Sm acts by diagonal permutations of indicesr∈[m]and the swapA↔B. Every
+subset X⊆A⊔B is classified up toG by counts( k11,k10,k01)of pairs r where |X∩{a r,br}|
+12
+
+--- Page 13 ---
+Table 4: Exact integer15-orbitZ2 ×S5 SSA+WM Farkas proof of(9) at m= 5( n= 10), certifying
+11 dedge−3 dsame−2 dmatch ≥0and κQ10(K5,5−M) = 12/11. Weights11yrescale the dual multipliers
+ysolving ∑
+OyOMO= ΠT(β−α)(with βedge = 1, αsame = 3/11, αmatch = 2/11). Signature3-tuples
+(k11,k10,k01)count(1 ,1),(1 ,0), and(0,1)background pairs on the remainingm−1matching edges
+(SSA-match, WM, with the active party’s removed matching mate placed inL rather thanK for
+WM);5-tuples( u,v,k 11,k10,k01)record mate-inclusion bits u,v∈{ 0,1}for the active pair followed
+by the background signature on the remainingm−2pairs (SSA-same,SSA-edge).
+Weight (11y) Inequality Orbit Signature Weight (11y) Inequality Orbit Signature
+2SSA-match(0,0,1)4WM (1,0,0)
+10SSA-same(0,0,0,0,1)2SSA-same(0,0,1,1,0)
+2SSA-match(0,0,2)2SSA-same(0,0,1,2,0)
+6SSA-same(0,0,0,0,2)2SSA-match(1,0,2)
+2SSA-match(0,1,2)4SSA-same(1,1,1,0,1)
+2SSA-same(0,0,0,1,2)2SSA-match(1,0,3)
+2WM (2,2,0)4SSA-same(1,1,2,0,0)
+2SSA-edge(0,1,0,0,3)OrbitΠ T (β−α):11d edge −3dsame −2dmatch ≥0
+has signature(1 ,1),(1 ,0), or(0 ,1), canonicalized underk10 ↔k01 to k10 ≥k01 with k11 + k10 +
+k01 ≤m . By convexity and G-invariance of QCONE2m and POLY2m, a G-symmetric metric
+(dedge,dsame,dmatch)(here(1 ,2,3)) is realized within distortionκif and only if aG-invariant entropy
+vector S(k11,k10,k01)achieves it under allG-orbits of elemental SSA (3matching-pair types), WM,
+and monotonicity.
+At m= 5, Table 4 gives the exact15-orbit integer Farkas certificate on the33-variable reduced
+system proving11dedge −3dsame −2dmatch ≥0on Q10 (kernel-certified in Lean 4, Theoremk55m_
+q10_distortion_ge_12_11). Distributing the orbit weights uniformly across the20edges,20
+same-side pairs, and5matching pairs and clearing20yields (9). Evaluating(9) on(1 ,2,3)gives
+11 ·20 ·1 = 220versus8 ·5 ·3 + 3 ·20 ·2 = 240, proving κQ10 ≥240/220 = 12/11(matched by
+an exact rational primal in Table 5). Solving the same symmetry-reduced system forPOLY10 and
+CUT10 yieldsκ POLY10 = 9/8andκ CUT10 = 4/3.
+Part (3): The Parity Staircase and(5−e)/2series.Exact rational primal and dual solutions
+for m= 3,..., 18appear in Table 5 and Figure 3. Geometrically, the odd/even split reflects how
+Weak Monotonicity interacts with purification complementarity across the bipartition (Figure 2b).
+Under POLY2m, monotonicity locks every subset entropy below the global capS([2m]) = 3(for
+instance, the minimal-entropy primal satisfiesSPOLY(0,k, 0) = (0 ,3
+2 ,5
+2 ,23
+8 ,3,3)at m = 5and
+(0,3
+2 ,5
+2 ,23
+8 ,3,3,3)at m = 6). Under Q2m, the optimal pure-state solution obeysS(X) = S(Xc)
+and S([2m]) = 0, permittingS(X)to rise above3at mid-size subsets before returning to0. When
+m= 2kiseven, Aand Bbisect symmetrically into halves of sizek, enabling complementary midpoint
+WM constraints (specificallyWM(0,0,3)paired with WM(1,1,0)in the exactm= 6dual) to clamp
+the one-sided profileS(0,j, 0)onto the monotone polymatroid ceiling. Whenm= 2k−1isodd, no
+equal integer bisection ofA exists, leaving a parity slack of1party that allows a non-monotone
+entropy hump exceeding3(e.g., SQ10(A) = 71 /22 > 3at m = 5), lowering κQ2m strictly below
+κPOLY2m.
+Finally, verifying(10) for m= 3,..., 18is immediate from Table 5, where successive increments
+for k= 3,..., 9are1 /8,1 /72,1 /576,1 /4800,1 /43200,1 /423360, and1 /4515840. To evaluate the
+13
+
+--- Page 14 ---
+Table 5: Exact rationalZ2 ×Sm-certified distortions ofKm,m −Mform= 3,...,18(n= 2m).
+m n κ CUT2m κPOLY2m κQ2m Parity GapκPOLY −κQ
+3 61 1 1 0
+4 81 1 1 0
+5 104/3 9/8 12/11 3/88
+6 124/3 9/8 9/8 0
+7 143/2 41/36 25/22 1/396
+8 163/2 41/36 41/36 0
+9 188/5 73/64 65/57 1/3648
+10 208/5 73/64 73/64 0
+11 225/3 1369/1200 397/348 1/34800
+12 245/3 1369/1200 1369/1200 0
+13 26 –9857/8640 1871/1640 1/354240
+14 28 –9857/8640 9857/8640 0
+15 30 –26833/23520 22589/19800 1/3880800
+16 32 –26833/23520 26833/23520 0
+17 34 –735991/645120 81649/71568 1/45803520
+18 36 –735991/645120 735991/645120 0
+infinite series in closed form, note that forj=k−1≥2,
+∞∑
+j=2
+1
+j!j(j−1) =
+∞∑
+j=2
+( 1
+j!(j−1) − 1
+j!j
+)
+=
+∫1
+0
+(1−t)(e t −1−t)
+t2 dt.
+Using the exact derivative identity
+d
+dt
+(
+1 +t−e t
+t
+)
+= (1−t)(e t −1−t)
+t2 −1,
+integrating overt∈ [0,1]yields ∑∞
+j=2
+1
+j!j(j−1) = 1 + (2−e) −0 = 3 −e. Halving and adding1gives
+the exact transcendental limit1 +3−e
+2 = 5−e
+2 ≈1.14085908577.
+5 Formal and Exact Rational Verification
+All numerical classifications and exact rational certificates in Theorems 2.1–4.1 are verified deter-
+ministically overQ in Python, while the39theorems mechanized in zero-dependency Lean 4.36.0
+independently machine-check the core algebraic, structural, and Farkas-kernel identities (including
+Proposition 1.3, isometric restriction, and the principal distortion lower bounds), hosted at
+https://github.com/lluiseriksson/quantum-entropic-metric-geometry(tagv1.0.4):
+1. Exact Rational Python Verifier(code/verify_quantum_entropic_metrics.py, tests/
+test_verification.py): uses scipy.optimize.linprog solely to locate candidate supports
+and then performs all polyhedral enumerations (cdd.gmp and exact Fukuda–Prodon Double
+Description), linear system inversions (sparseDomainMatrix over Q), primal feasibility checks,
+and Farkas dual identity verifications strictly in exact integer andfractions.Fraction arith-
+metic. All4module-level test suites in pytest pass cleanly, covering all296rays of MET6,
+all1736rays of POLY6 (with exact rank-14tightness verification), all112connected6-vertex
+graphs, all853connected7-vertex graphs, and the fullm= 3...18parity staircase.
+14
+
+--- Page 15 ---
+5 6 7 8 9 10 11 12 13 14 15 16 17 18
+Bipartition half-size m (n = 2m parties in Km; m ¡ M)
+1.09
+1.10
+1.11
+1.12
+1.13
+1.14
+1.15Optimal metric distortion ∙
+12
+11
+9
+8
+9
+8
+25
+22
+41
+36
+65
+57
+73
+64
+(a) Exact Parity Staircase: ∙Q2m  vs. ∙POLY2m  (m = 5 …18)
+4 6 8 10 12 14 16 18
+1.0
+1.2
+1.4
+1.6
+Macro gap: ∙CUT ! 2
+∙CUT
+∙POLY
+∙Q
+Conjectured asymptote (5 ¡ e)=2 ¼ 1:140859
+∙POLY2m  (monotone plateau on (2k¡1; 2k))
+∙Q2m  (SSA + WM odd/even parity staircase)
+Odd m: ∙Q2m < ∙POLY2m
+Even m: ∙Q2m = ∙POLY2m
+5 7 9 11 13 15 17
+Odd half-size m = 2k ¡ 1
+10−9
+10−8
+10−7
+10−6
+10−5
+10−4
+10−3
+10−2
+10−1
+Exact rational gap (log scale)
+3
+88
+1
+396
+1
+3648
+1
+34800
+1
+354240
+1
+3880800
+1
+45803520
+(b) Factorial Decay of Steps & Odd-m Splitting Gap
+Polymatroid step 1
+2(k¡1)! (k¡1)(k¡2)
+Odd-m quantum gap ∙POLY ¡ ∙Q
+Figure 3: (a) TheKm,m −M distortion staircase (m = 5 ... 18): κPOLY2m steps at oddm and
+plateaus on(2 k−1,2k), whileκQ2m locks ontoκPOLY2m at every evenmand drops strictly below at
+every oddm, both consistent with convergence toward(5−e)/2(Open Problem 6.2). Inset: macro
+gap againstκCUT2m →2. (b) Factorial decay of the step increments and the odd-mquantum parity
+gap on a logarithmic scale.
+2. Targeted Lean 4.36.0 Kernel Mechanization(lean/QuantumEntropicMetrics.lean):
+compiles withlean -DwarningAsError=true with0errors,0warnings,0imports,0 sorry,0
+native_decide, and0 Classical.choice axioms (verified via#print axioms). It proves: (i)
+the general integer Conic Farkas Distortion Theorem (farkas_distortion_bound); (ii) purifi-
+cation duality (purification_ssa_gives_wm); (iii) isometric restriction validity forQCONEn
+(isometric_restriction_preserves_qcone); (iv) theCB+
+4 triangle violation underS(i|j) ≥0;
+(v) the Segre quadricQ+(3,F)incidence and rank-one intersection identities over an arbitrary
+field (segre_same_regulus_disjoint, segre_opp_regulus_rank_one); (vi)F4 ≥0across all
+128classical cuts and21Bell pairs together with F4(dRem#4) = −1; and (vii) unconditional
+kernel-verified distortion bounds forK3,3−e(9/8), QFail1 (21/20), QFail2 (41/40), andK5,5−M
+atm= 5(12/11).
+Attribution and Verification Scope.Classical variation-of-information metrics trace to Ra-
+jski [1], polyhedral cut and metric cones to Deza and Laurent [12], algorithmic information distance
+to Bennett et al. [2], Hutter [9], and Hou [10], non-Shannon polymatroid facets to Zhang and
+Yeung [3], strong subadditivity of von Neumann entropy to Lieb and Ruskai [11], quantum entropy
+cones to Pippenger [5] and Linden–Winter [7], and quantum state merging to Horodecki, Oppenheim,
+and Winter [6]. Our exact rational certifications hold unconditionally forn≤ 7and m≤ 18; the
+persistence of (10) for m≥ 19is stated below as an open problem rather than a proved theorem.
+Parts of the computational exploration, exact certificate extraction, and Lean 4 proof engineering
+were carried out with Google Antigravity AI assistance under author supervision and independent
+exact-rational and kernel verification.
+15
+
+--- Page 16 ---
+6 Open Problems
+Open Problem6.1 (Sep #0and Multipartite vs. Subspace+Bell Realizability).In our classification
+of the14graphs in Q7 \(POLY7 ∪Mcb
+7 ),6graphs (including Rem #4 = G800) are already
+realized by Bell pairs plusF4
+2-spread subspace atoms, whereas the remaining8—starting with
+Sep #0( G550, edge set{(0,1),(0,5),(0,6),(1,2),(1,4),(2,3),(2,5),(3,4),(4,5)}, κPOLY7 = 9/8,
+κCB7 = 8/7, κQ7 = 1)—defy all mixtures of classical cuts, Bell pairs, GHZ states, andF4
+2-spread
+atoms. Does Sep #0embed isometrically into Mq,+
+7 via non-stabilizer or higher-rank multipartite
+entangled states, or is it separated fromMq,+
+7 by constrained quantum entropy inequalities beyond
+SSA+WM (such as Cadney–Linden–Winter [8] or holographic inequalities)?
+Open Problem6.2 (Analytic Proof of the(5 −e)/2Staircase Limit).Establish analytically for
+all m≥ 3that κPOLY2m(Km,m −M )equals the partial sum (10) and that κQ2m(Km,m −M ) =
+κPOLY2m(Km,m −M )for every even m= 2k. Together with the isometric sandwichκPOLY4k−4 ≤
+κQ4k−2 ≤κPOLY4k−2 fork≥3, this would rigorously prove
+limm→∞κQ2m(Km,m −M) = limm→∞κPOLY2m(Km,m −M) = 5−e
+2 .
+Open Problem6.3 (Bourgain’s Expander Barrier inQn).By Bourgain’s theorem and the Linial–
+London–Rabinovich bound [4], any n-vertex constant-degree expander graphG incurs classical
+ℓ1/cut distortionκCUTn(G) = Ω(logn). By contrast, POLYn and Qn are far richer thanCUTn,
+and ourKm,m −M family exhibits bounded distortion<1.15even as κCUT2m →2. Does κQn(G)
+remain O(1)on bounded-degree expanders, or does anω(1)—perhapsΩ( logn)—entropic metric
+distortion barrier survive inQn?
+References
+[1] C. Rajski,A metric space of discrete probability distributions, Information and Control4(1961),
+371–377.
+[2] C. H. Bennett, P. Gács, M. Li, P. M. B. Vitányi, and W. H. Zurek,Information distance, IEEE
+Transactions on Information Theory44(1998), no. 4, 1407–1423.
+[3] Z. Zhang and R. W. Yeung,On characterization of entropy function via information inequalities,
+IEEE Transactions on Information Theory44(1998), no. 4, 1440–1452.
+[4] N. Linial, E. London, and Y. Rabinovich,The geometry of graphs and some of its algorithmic
+applications, Combinatorica15(1995), no. 2, 215–245.
+[5] N. Pippenger,The inequalities of quantum information theory, IEEE Transactions on Informa-
+tion Theory49(2003), no. 4, 773–789.
+[6] M. Horodecki, J. Oppenheim, and A. Winter,Partial quantum information, Nature436
+(2005), 673–676; alsoQuantum state merging and negative information, Communications in
+Mathematical Physics269(2007), 107–136.
+[7] N. Linden and A. Winter,A new inequality for the von Neumann entropy, Communications in
+Mathematical Physics259(2005), 129–138.
+[8] J. Cadney, N. Linden, and A. Winter,Infinitely many constrained inequalities for the von
+Neumann entropy, IEEE Transactions on Information Theory58(2012), no. 6, 3657–3663.
+16
+
+--- Page 17 ---
+[9] M. Hutter,Properties of Algorithmic Information Distance, arXiv:2507.21988 (2025).
+[10] F. Hou,Complete bipartite embeddings, lattice non-embeddability, and non-Euclidean powers of
+information distance, arXiv:2609.38919 (2026).
+[11] E. H. Lieb and M. B. Ruskai,Proof of the strong subadditivity of quantum-mechanical entropy,
+Journal of Mathematical Physics14(1973), 1938–1941.
+[12] M. M. Deza and M. Laurent,Geometry of Cuts and Metrics, Algorithms and Combinatorics
+15, Springer, 1997.
+17
